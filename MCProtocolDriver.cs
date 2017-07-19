@@ -7,9 +7,8 @@ using SYN.BC.Core.Common;
 using System.Net.Sockets;
 using System.Net;
 using SYN.BC.Driver.PLC.Mitsubishi.MappingAnalysis;
-using System.Diagnostics;
 using System.Timers;
-using SYN.BC.Driver.PLC;
+using SYN.BC.Core.Log;
 
 namespace SYN.BC.Driver.PLC.MCProtocolDriver
 {
@@ -22,6 +21,7 @@ namespace SYN.BC.Driver.PLC.MCProtocolDriver
         private string _Port;
         private string _LocalIP = "192.168.2.2";
         private string _LocalPort = "2005";
+        private Logger _log;
 
         private string _BasicFormat = "5000"; //ASCII Header(3E)
         private string _SubBasicFormat = "03FF00"; //請求目標模組 I/O 編號[03FF]  + 請求目標模組站號[00]
@@ -119,6 +119,8 @@ namespace SYN.BC.Driver.PLC.MCProtocolDriver
         {
             try
             {
+                _log = new Logger(nameof(MCProtocol));
+
                 _SocketTCP = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                 _SocketTCP.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.Linger, new LingerOption(false, 1));
                 _SocketTCP.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReceiveTimeout, 2500);
@@ -208,7 +210,7 @@ namespace SYN.BC.Driver.PLC.MCProtocolDriver
         /// <param name="Size">大小</param>
         /// <param name="Value">讀到的值</param>
         /// <param name="Name">記憶體名稱</param>
-        /// <returns>return code</returns>
+        /// <returns>return complete code</returns>
         public override int ReadWordVal(string StartAddress, int Size, ref short[] Value, string Name = "")
         {
             byte[] SendDataByte;
@@ -241,24 +243,7 @@ namespace SYN.BC.Driver.PLC.MCProtocolDriver
                 Value = MappingAnalysisUtility.HEXStringToShortArray(ReadString).Take(Size).ToArray();
                 return 0;
                 ////////////////////////////////////////////////////////
-
-                //string Command = CreateCommandString(MCCommand.BatchRead, MCCommand.Word, Name, StartAddress, Size);
-                //SendDataByte = Encoding.ASCII.GetBytes(Command);
-                //_SocketTCP.Send(SendDataByte,SendDataByte.Length, SocketFlags.None);
-
-                //int ByteRead = _SocketTCP.Receive(RecvDataByte, RecvDataByte.Length, SocketFlags.None);
-                //if(ByteRead > 0)
-                //{
-                //    string RecvStr = Encoding.ASCII.GetString(RecvDataByte, 0, ByteRead);
-                //    string CompleteCode = GetCompleteCode(RecvStr);
-                //    if (CompleteCode != "0000") { return Convert.ToInt32(CompleteCode,16); }
-
-                //    //var result = HexStringToByteArray(RecvStr.Substring(22));
-                //    Value = MappingAnalysisUtility.HEXStringToShortArray(RecvStr.Substring(22));
-                //    return 0;
-                //}
-                //else
-                //    return -1;
+                
             }
             catch (Exception ex)
             {
@@ -361,19 +346,6 @@ namespace SYN.BC.Driver.PLC.MCProtocolDriver
                 }
                 return 0;
 
-                //string Command = CreateCommandString(MCCommand.BatchWrite, MCCommand.Word, Name, StartAddress, Size, Value);
-                //WriteByte = Encoding.ASCII.GetBytes(Command);
-                //_SocketTCP.Send(WriteByte, WriteByte.Length, SocketFlags.None);
-                //int RtnByte = _SocketTCP.Receive(RecvDataByte, RecvDataByte.Length, SocketFlags.None);
-                //if (RtnByte > 0)
-                //{
-                //    string RecvStr = Encoding.ASCII.GetString(RecvDataByte, 0, RtnByte);
-                //    string CompleteCode = GetCompleteCode(RecvStr);
-                //    if (CompleteCode != "0000") { return Convert.ToInt32(CompleteCode, 16); }
-                //    return 0;
-                //}
-                //else
-                //    return -1;
             }
             catch (Exception ex)
             {
@@ -386,7 +358,7 @@ namespace SYN.BC.Driver.PLC.MCProtocolDriver
             throw new NotImplementedException();
         }
 
-        public string CreateCommandString( string cmooand, string subcommand, string DeviceName, string StartAddress, int Size, short[] WriteVal = null)
+        private string CreateCommandString( string cmooand, string subcommand, string DeviceName, string StartAddress, int Size, short[] WriteVal = null)
         {
             string Address;
             string Name = DeviceName.PadRight(2, '*');
@@ -426,6 +398,11 @@ namespace SYN.BC.Driver.PLC.MCProtocolDriver
                                             Tmp.Length.ToString("X").PadLeft(4, '0') +
                                             Tmp;
             return SendCMD;
+        }
+
+        public override bool CheckStatus()
+        {
+            return _SocketTCP.Connected;
         }
     }
 }
