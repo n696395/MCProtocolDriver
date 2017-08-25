@@ -3,7 +3,6 @@ D:\ICP\trunk\WiseBC\MCProtocolDriver\bin\Debug\Core.dll
 D:\ICP\trunk\WiseBC\MCProtocolDriver\bin\Debug\log4net.dll
 D:\ICP\trunk\WiseBC\MCProtocolDriver\bin\Debug\log4net.xml
 D:\ICP\trunk\WiseBC\MCProtocolDriver\obj\Debug\MCProtocolDriver.pdb
-D:\ICP\trunk\WiseBC\MCProtocolDriver\obj\Debug\MCProtocolDriver.csprojResolveAssemblyReference.cache
 D:\ICP\trunk\WiseBC\MCProtocolDriver\bin\Debug\MappingAnalysis.dll
 D:\ICP\trunk\WiseBC\MCProtocolDriver\bin\Debug\MappingAnalysis.pdb
 D:\ICP\trunk\WiseBC\MCProtocolDriver\obj\Debug\MCProtocolDriver.Test.resources
@@ -15,3 +14,4 @@ D:\ICP\trunk\WiseBC\MCProtocolDriver\bin\Debug\Newtonsoft.Json.dll
 D:\ICP\trunk\WiseBC\MCProtocolDriver\bin\Debug\Newtonsoft.Json.xml
 D:\ICP\trunk\WiseBC\MCProtocolDriver\bin\Debug\MCProtocolDriver.exe
 D:\ICP\trunk\WiseBC\MCProtocolDriver\obj\Debug\MCProtocolDriver.exe
+D:\ICP\trunk\WiseBC\MCProtocolDriver\obj\Debug\MCProtocolDriver.csprojResolveAssemblyReference.cache

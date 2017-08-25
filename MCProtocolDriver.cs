@@ -29,11 +29,15 @@ namespace SYN.BC.Driver.PLC.MCProtocolDriver
         private string _NetNo="00";
         private string _PCNo = "FF";
 
-        private const short _MAX_BIT_RW_POINT = 3584; //Bit
-        private const short _MAX_WORD_RW_POINT = 960; //Word
+        private const short _MAX_BIT_RW_POINT = 3584; //Bit最大讀寫數量
+        private const short _MAX_WORD_RW_POINT = 960; //Word最大讀寫數量
 
-        Timer t = new Timer(5000);//斷線檢查 (5sec)
+        Timer t = new Timer(3000);//斷線檢查 (3 sec)
 
+        /// <summary>
+        /// 建構MCProtocol
+        /// </summary>
+        /// <param name="para">參數</param>
         public MCProtocol(List<ConstructorParameter> para)
         {
             _IP = (from p in para
@@ -83,6 +87,10 @@ namespace SYN.BC.Driver.PLC.MCProtocolDriver
             }
         }
 
+        /// <summary>
+        /// Connect
+        /// </summary>
+        /// <returns>Result</returns>
         public override bool Connect()
         {
             try
@@ -96,6 +104,10 @@ namespace SYN.BC.Driver.PLC.MCProtocolDriver
             }
         }
 
+        /// <summary>
+        /// DisConnect
+        /// </summary>
+        /// <returns>Result</returns>
         public override bool DisConnect()
         {
             try
@@ -243,7 +255,6 @@ namespace SYN.BC.Driver.PLC.MCProtocolDriver
                 Value = MappingAnalysisUtility.HEXStringToShortArray(ReadString).Take(Size).ToArray();
                 return 0;
                 ////////////////////////////////////////////////////////
-                
             }
             catch (Exception ex)
             {
@@ -345,7 +356,6 @@ namespace SYN.BC.Driver.PLC.MCProtocolDriver
                         return -1;
                 }
                 return 0;
-
             }
             catch (Exception ex)
             {
